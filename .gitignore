@@ -33,3 +33,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# tailwind
+.turbo
+.vscode
+styles/dist.css
+
+# google credentials json
+/utils/serviceAccount.json

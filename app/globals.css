@@ -1,27 +1,79 @@
 @tailwind base;
-@tailwind components;
 @tailwind utilities;
+@tailwind components;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@layer base {
+	::-webkit-scrollbar {
+		@apply h-[6px] w-[6px] lg:h-[7px] lg:w-[7px];
+	}
+
+	::-webkit-scrollbar-track {
+		@apply rounded-lg;
+	}
+
+	::-webkit-scrollbar-thumb {
+		@apply rounded-lg bg-accent-500;
+
+		&:hover {
+			@apply bg-accent-500/70;
+		}
+	}
+
+	body {
+		@apply overflow-hidden bg-primary-600 text-primary-100;
+	}
+
+	input,
+	textarea {
+		@apply border-primary-400 bg-primary-500;
+	}
+
+	input[type="radio"] {
+		@apply hidden;
+
+		+ .tab-label {
+			@apply cursor-pointer rounded-md bg-accent-600 px-4 py-2 text-lg text-white duration-150 ease-out hover:bg-accent-700;
+		}
+
+		&:checked + .tab-label {
+			@apply bg-accent-700;
+		}
+	}
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
+@layer components {
+	.chat-message {
+		word-break: break-all;
+	}
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+	.loader {
+		color: rgba(90, 90, 90, 0.2);
+		position: relative;
+		display: inline-block;
+		border: 1px solid;
+		border-radius: 50%;
+		border-right-color: #5a5a5a;
+		animation: rotation 1s linear infinite;
+
+		&.sm {
+			border-width: 3px;
+			width: 22px;
+			height: 22px;
+		}
+
+		&.lg {
+			border-width: 5px;
+			width: 38px;
+			height: 38px;
+		}
+	}
+
+	@keyframes rotation {
+		0% {
+			transform: rotate(0);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
 }

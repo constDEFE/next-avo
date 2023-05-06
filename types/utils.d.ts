@@ -1,0 +1,1 @@
+declare type RequestsTab = "pending" | "declined";
