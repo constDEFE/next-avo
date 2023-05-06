@@ -8,7 +8,11 @@ import { db } from "./firebase";
 
 const CustomFirestoreAdapter = () => {
 	const adapter = FirestoreAdapter({
-		credential: cert(process.env.SERVICE_ACCOUNT)
+		credential: cert({
+			projectId: process.env.FIREBASE_PROJECT_ID,
+			clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+			privateKey: process.env.FIREBASE_PRIVATE_KEY
+		})
 	});
 
 	return {
@@ -44,12 +48,12 @@ export const AuthOptions: Options = {
 	callbacks: {
 		jwt: async ({ token, user }) => {
 			if (user) token.id = user.id;
-			
+
 			return token;
 		},
 		session: async ({ session, token }) => {
 			session.user.id = token.id;
-			
+
 			return session;
 		}
 	},
