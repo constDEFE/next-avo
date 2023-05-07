@@ -19,7 +19,7 @@ const Sidebar: FC<Props> = ({ user, chats, requests }) => {
 	const handleSidebar = useCallback(() => setIsOpen((prev) => !prev), []);
 
 	const cn = clsx(
-		"flex h-screen w-[300px] flex-col items-start justify-between border-r border-primary-500 bg-primary-600 fixed z-10 -left-[300px] lg:left-0 duration-300 ease-out lg:static",
+		"flex w-[300px] flex-col items-start justify-between border-r border-primary-500 bg-primary-600 fixed z-10 -left-[300px] lg:left-0 duration-300 ease-out lg:static",
 		isOpen && "left-0"
 	);
 
