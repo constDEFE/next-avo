@@ -12,7 +12,7 @@ const layout = async ({ children }: PropsWithChildren) => {
 	])) as [User[], number];
 
 	return (
-		<div className="flex h-screen">
+		<div className="page-wrapper">
 			<Sidebar user={{ user: session.user }} chats={chats} requests={requests} />
 			<main className="w-full h-full">{children}</main>
 		</div>
