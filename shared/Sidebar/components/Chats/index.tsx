@@ -31,7 +31,7 @@ const Chats: FC<Props> = memo(({ chats: initialChats, user, onClick }) => {
 	}, [user.user.id]);
 
 	return (
-		<nav className="relative mt-10 h-full w-full flex-auto overflow-y-auto">
+		<nav className="relative mt-4 h-full w-full flex-auto overflow-y-auto">
 			<h2 className="sticky top-0 bg-primary-600 px-4 text-sm font-semibold text-primary-300">Your chats</h2>
 			<ul className="mt-4">
 				{chats.map((chat) => (
