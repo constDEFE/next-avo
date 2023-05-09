@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { AuthOptions } from "@/utils/auth";
 import { getEmailById, getUsersFriendsEmails } from "@/utils/db";
-import { db } from "@/utils/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { rtdb } from "@/utils/firebase";
+import { ref, set,  } from "firebase/database";
 import { nanoid } from "nanoid";
 import { getServerSession } from "next-auth";
 
@@ -43,7 +43,7 @@ export const POST = async (request: NextRequest) => {
 		}
 
 		const newMessageId = nanoid();
-		const messageRef = doc(db, "chats", chatId, "messages", newMessageId);
+		const messagesRef = ref(rtdb, `chats/${chatId}/messages/${newMessageId}`);
 		const messageToSend: Message = {
 			id: newMessageId,
 			createdAt: new Date().getTime(),
@@ -51,7 +51,7 @@ export const POST = async (request: NextRequest) => {
 			content: message
 		};
 
-		await setDoc(messageRef, messageToSend);
+		await set(messagesRef, messageToSend)
 
 		return NextResponse.json("OK", { status: 200 });
 	} catch (e) {

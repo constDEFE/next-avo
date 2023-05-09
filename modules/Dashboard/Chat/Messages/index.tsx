@@ -1,9 +1,9 @@
 "use client";
 
 import { type FC, useRef, useState, useEffect } from "react";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { db } from "@/utils/firebase";
+import { rtdb } from "@/utils/firebase";
 import Message from "./components/Message";
+import { onValue, ref, query } from "firebase/database";
 
 interface Props {
 	messages: Message[];
@@ -16,12 +16,16 @@ const Messages: FC<Props> = ({ messages: initialMessages, currentUserId, chatId 
 	const scrollDownRef = useRef<HTMLSpanElement>(null);
 
 	useEffect(() => {
-		const q = query(collection(db, "chats", chatId, "messages"), orderBy("createdAt", "asc"));
+		const q = query(ref(rtdb, `chats/${chatId}/messages`));
 
-		const unsubscribe = onSnapshot(q, (snaps) => {
-			const messages = snaps.docs.map((doc) => doc.data() as Message);
+		const unsubscribe = onValue(q, (snap) => {
+			if (!snap.exists()) return setMessages([]);
 
-			setMessages(messages);
+			const messagesList = snap.val() as Object;
+			const newMessages = Object.values(messagesList) as Message[];
+			const sortedMessages = newMessages.sort((a, b) => a.createdAt - b.createdAt);
+
+			setMessages(sortedMessages);
 		});
 
 		return () => unsubscribe();
@@ -33,7 +37,7 @@ const Messages: FC<Props> = ({ messages: initialMessages, currentUserId, chatId 
 
 	return (
 		<main className="h-full overflow-y-auto bg-primary-600">
-			<ul className="min-h-full flex flex-auto flex-col justify-end gap-1 p-2">
+			<ul className="flex min-h-full flex-auto flex-col justify-end gap-1 p-2">
 				{messages.map((message, i) => {
 					const isCurrentUser = message.senderId === currentUserId;
 					const hasNextMessageFromSameUser = messages[i]?.senderId === messages[i + 1]?.senderId;

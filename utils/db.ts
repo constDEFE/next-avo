@@ -1,5 +1,6 @@
-import { collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
-import { db } from "./firebase";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { ref, query as rt_query, get } from "firebase/database";
+import { db, rtdb } from "./firebase";
 
 export const getEmailById = async (id: string) => {
 	const ref = doc(db, "users", id);
@@ -86,12 +87,14 @@ export const getUserByEmail = async (email: string) => {
 };
 
 export const getChatMessages = async (chatId: string) => {
-	const q = query(collection(db, "chats", chatId, "messages"), orderBy("createdAt", "asc"));
-	const snaps = await getDocs(q);
+	const q = rt_query(ref(rtdb, `chats/${chatId}/messages`));
+	const snap = await get(q);
+	
+	if (!snap.exists() || !snap.hasChildren()) return [];
 
-	if (snaps.empty) return [];
+	const messagesList = snap.val() as Object;
+	const messages = Object.values(messagesList) as Message[]
+	const sortedMessages = messages.sort((a, b) => a.createdAt - b.createdAt);
 
-	const messages = snaps.docs.map((doc) => doc.data());
-
-	return messages as Message[];
+	return sortedMessages;
 };

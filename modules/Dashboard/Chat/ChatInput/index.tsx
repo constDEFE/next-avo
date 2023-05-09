@@ -54,7 +54,7 @@ const ChatInput: FC<Props> = ({ partner, chatId }) => {
 	return (
 		<div className="flex items-center gap-2 border-t border-primary-500 bg-primary-600 p-3">
 			<TextareaAutosize
-				className="max-h-[30vh] min-h-[42px] w-full rounded-md border px-4 py-2 focus:outline-none focus:border-accent-600"
+				className="max-h-[30vh] min-h-[42px] w-full rounded-md border py-2 px-3 focus:outline-none focus:border-accent-600"
 				placeholder={`Message ${partner.name}`}
 				ref={textareaRef}
 				onKeyDown={handleEnterKeyDown}
