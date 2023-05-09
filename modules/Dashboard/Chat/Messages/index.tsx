@@ -3,7 +3,7 @@
 import { type FC, useRef, useState, useEffect } from "react";
 import { rtdb } from "@/utils/firebase";
 import Message from "./components/Message";
-import { onValue, ref, query } from "firebase/database";
+import { onValue, ref, query, off } from "firebase/database";
 
 interface Props {
 	messages: Message[];
@@ -18,7 +18,7 @@ const Messages: FC<Props> = ({ messages: initialMessages, currentUserId, chatId 
 	useEffect(() => {
 		const q = query(ref(rtdb, `chats/${chatId}/messages`));
 
-		const unsubscribe = onValue(q, (snap) => {
+		onValue(q, (snap) => {
 			if (!snap.exists()) return setMessages([]);
 
 			const messagesList = snap.val() as Object;
@@ -28,7 +28,7 @@ const Messages: FC<Props> = ({ messages: initialMessages, currentUserId, chatId 
 			setMessages(sortedMessages);
 		});
 
-		return () => unsubscribe();
+		return () => off(q, "value");
 	}, [chatId]);
 
 	useEffect(() => {
